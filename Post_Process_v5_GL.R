@@ -105,8 +105,7 @@ ggplot() +
 SCb_Upper <- as.data.frame(dfl$SC[bfi_peak_index]/bfip$bfi)
 SCb_Upper$i <- bfi_peak_index
 colnames(SCb_Upper) <- c('SCb', 'i')
-SCb_Upper$SCb <- pmax(SCb_Upper$SCb, dfl$SC[bfi_peak_index]) #if eckhardt over predicts b, SCb will be less than SCq which cannot happen
-
+SCb_Upper$SCb <- pmax(SCb_Upper$SCb, dfl$SC[bfi_peak_index]) 
 
 #SCb Lower Bound, SCy = SCq
 SCb_Lower <- as.data.frame(dfl$SC[bfi_peak_index])
@@ -272,19 +271,6 @@ ggplot() +
   theme_classic() + theme(legend.position = "top",legend.title = element_text(size = 10, face = "bold"),legend.text = element_text(size = 9))
 
 
-#####################
-#Raw Data (This ones not helpful i just think it looks funny)
-ggplot() +
-  geom_line(data = SCfl, aes(x = time, y = SCb_L), color = "lightgreen", alpha = 1, linewidth = 1)+
-  geom_line(data = SCfl, aes(x = time, y = SCb_U), color = "darkgreen", alpha = 1, linewidth = 0.5)+
-  geom_line(data = dfl, aes(x = time, y = SC), color = "black", alpha = 1, linewidth = 0.5)+
-  geom_line(data = SCfl, aes(x = time, y = SCy_U), color = "red", alpha = 1, linewidth = 0.5)+
-  geom_line(data = SCfl, aes(x = time, y = SCy_L), color = "pink", alpha = 1, linewidth = 0.5)+
-  labs(x = "Time",
-       y = "SC (mS/cm)")+
-  #xlim(3000, 7000) +
-  #ylim(0,50) +
-  theme_classic()
 
 ################################################################################
 ############################ Estimate SCb, SCy #################################
@@ -354,21 +340,6 @@ ggplot() +
   #ylim(0,50) +
   theme_classic()
 
-
-
-################################################################################
-######################## Notes on previous Versions ############################
-################################################################################
-
-#This is not incorrect to assume SCy = 0, so this will act as an upper bound. I rewrote this in an above line although...
-#...in effect it is the same thing
-
-#SCb <- as.data.frame(dfl$SC[bfi_peak_index])
-# SCb <- as.data.frame(dfl$SC[bfi_peak_index]/bfip$bfi)
-# SCb$i <- bfi_peak_index
-# colnames(SCb) <- c('SCb','i')
-
-
 ggplot() +
   geom_line(data = dfl, aes(x = time, y = strflow), color = "grey", alpha = 1, linewidth = 1)+
   geom_line(data = dfl, aes(x = time, y = qf), color = "blue", alpha = 1, linewidth = 0.5)+
@@ -380,16 +351,4 @@ ggplot() +
   ylim(0,1000) +
   theme_classic()
 
-
-# #Unfortunately this line is not correct, SC*(YFI) = SCy cannot be derived from the mass balance equation, and thus is not true. The Resulting graphing looks great but it turns out to be a coincidence...
-# #...due to the inverse relationship that (YFI) & SCq have. 
-# #... A drop in SCq occures during quickflow dominated periods in which YFI is high. This increase is directly proportional to the increase in y (YFI = y/Q, y goes up, YFI goes up directly),...
-# #... whilst SCq decreases as y*(SCy) dominates and b*(SCb) decreases. This proportionality to the amount of y in the stream results in a relatively stable line which is what we saw with the equation below...
-# # SCy = SCq*(1-BFI) = SCq*(YFI), as SCq goes down, YFI (or 1-BFI) go up by close to the same factor and thus remain the same. This is however not the case, so instead I used the mass balance relationship to solve for SCy...
-# #... plugging in the upper and lower bound values previously calculated for SCb. This produces SCy upper and lower bounds that coincide with the SCb extremes. 
-# 
-# # #SCy <- as.data.frame(dfl$SC[qfi_peak_index])
-# # SCy <- as.data.frame(dfl$SC[qfi_peak_index]*(1-qfip$qfi))
-# # SCy$i <- qfi_peak_index
-# # colnames(SCy) <- c('SCy','i')
 
